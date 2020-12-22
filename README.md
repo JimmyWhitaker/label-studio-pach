@@ -1,5 +1,9 @@
 # Label Studio with Pachyderm
 
+<p align="center">
+	<img src='images/ls_p_integration.jpg' height='225' title='Pachyderm'>
+</p>
+
 [Label Studio](https://labelstud.io/) supports many different types of data labeling tasks, while Pachyderm allows you to incorporate data versioning and data-driven pipelines. This integration connects a Pachyderm versioned data backend with Label Studio to support versioning datasets and tracking the data lineage of pipelines built off the versioned datasets.
 
 ## How it works
@@ -59,8 +63,9 @@ The `.env` file needs to be configured for your Pachyderm s3 gateway. Pachyderm'
 ### Minikube configuration
 If you are running Pachyderm locally on minikube, you can get the `ENDPOINT_URL` for the Pachyderm s3 gateway by running the command:
 
-```shell
-minikube ip
+```
+$ minikube ip
+192.168.64.8
 ```
 
 <!-- ## Creating a new project
