@@ -4,7 +4,7 @@
 	<img src='images/ls_p_integration.jpg' width='800' title='Pachyderm'>
 </p>
 
-[Label Studio](https://labelstud.io/) supports many different types of data labeling tasks, while Pachyderm allows you to incorporate data versioning and data-driven pipelines. This integration connects a Pachyderm versioned data backend with Label Studio to support versioning datasets and tracking the data lineage of pipelines built off the versioned datasets.
+[Label Studio](https://labelstud.io/) supports many different types of data labeling tasks, while [Pachyderm](https://www.pachyderm.com/) allows you to incorporate data versioning and data-driven pipelines. Integrating both open source components is a useful way to manage the labeling component of the [data loop](https://jimmymwhitaker.medium.com/completing-the-machine-learning-loop-e03c784eaab4). This integration connects a Pachyderm versioned data backend with Label Studio to support versioning datasets and tracking the data lineage of pipelines built off the versioned datasets.
 
 ## How it works
 
@@ -19,7 +19,33 @@ We'll create a text labeling example by:
 
 Note: Label studio currently doesn't support arbitrary s3 storage (only AWS s3 and GCS), so I modified Label Studio's s3 storage backend to support generic object storage endpoints, which allows us to connect to the Pachyderm s3 gateway running locally. you can see the code [here](label_studio/storage/s3.py)
 
-## TLDR;
+## Getting Started
+This example uses a Pachyderm deployment for scaling and management. We can deploy locally or to a cloud deployment as described here: [Pachyderm Getting Started](https://docs.pachyderm.com/latest/getting_started/)
+
+Once everything is up, we can check the setup by running: 
+1. `kubectl get all` to ensure all the pods are up. 
+2. `pachctl version` which will show both the `pachctl` and `pachd` versions.
+
+### Configuring .env file
+The `.env` file needs to be configured for your Pachyderm s3 gateway. Pachyderm's s3 gateway is accessed through an `http` endpoint that is available on port `30600` on the Pachyderm cluster. This address is used to as the `ENDPOINT_URL` for the Label Studio backend in the `.env` file. 
+
+### Minikube configuration
+If you are running Pachyderm locally on minikube, you can get the `ENDPOINT_URL` for the Pachyderm s3 gateway by running the command:
+
+```
+$ minikube ip
+192.168.64.8
+```
+
+<!-- ## Creating a new project
+A new project requires creating a new configuration (see some of the [examples](examples/)). Creating a new project with Label Studio can be done by from the command line. We'll use the Docker image that we created to do this, adding the `--init` flag which will create the project. 
+
+```shell
+docker run --env-file .env -v $(pwd)/examples/my_new_project:/my_new_project -p 8080:8080 --entrypoint=label-studio jimmywhitaker/label-studio:latest start /my_new_project/ --source s3 --source-path master.raw_data --target s3-completions --target-path master.labeled_data --input-format=image --template image_bbox --source-params "{\"use_blob_urls\": false, \"regex\": \".*\"}"
+
+``` -->
+
+## Example Workflow
 
 ``` bash
 # Pachyderm Setup
@@ -57,24 +83,6 @@ pachctl get file -r labeled_data@v1:/ -o labeled_data/
 
 ```
 
-## Configuring .env file
-The `.env` file needs to be configured for your Pachyderm s3 gateway. Pachyderm's s3 gateway is accessed through an `http` endpoint that is available on port `30600` on the Pachyderm cluster. This address is used to as the `ENDPOINT_URL` for the Label Studio backend in the `.env` file. 
-
-### Minikube configuration
-If you are running Pachyderm locally on minikube, you can get the `ENDPOINT_URL` for the Pachyderm s3 gateway by running the command:
-
-```
-$ minikube ip
-192.168.64.8
-```
-
-<!-- ## Creating a new project
-A new project requires creating a new configuration (see some of the [examples](examples/)). Creating a new project with Label Studio can be done by from the command line. We'll use the Docker image that we created to do this, adding the `--init` flag which will create the project. 
-
-```shell
-docker run --env-file .env -v $(pwd)/examples/my_new_project:/my_new_project -p 8080:8080 --entrypoint=label-studio jimmywhitaker/label-studio:latest start /my_new_project/ --source s3 --source-path master.raw_data --target s3-completions --target-path master.labeled_data --input-format=image --template image_bbox --source-params "{\"use_blob_urls\": false, \"regex\": \".*\"}"
-
-``` -->
 
 ## Current Issues/Not Supported
 
