@@ -45,7 +45,7 @@ docker run --env-file .env -v $(pwd)/examples/my_new_project:/my_new_project -p 
 
 ``` -->
 
-## Example Workflow
+## Running the Text Labeling Example
 
 ``` bash
 # Pachyderm Setup
@@ -82,7 +82,6 @@ pachctl create branch labeled_data@v2 --head master
 pachctl get file -r labeled_data@v1:/ -o labeled_data/
 
 ```
-
 
 ## Current Issues/Not Supported
 
