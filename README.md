@@ -20,16 +20,26 @@ We'll create a text labeling example by:
 Note: Label studio currently doesn't support arbitrary s3 storage (only AWS s3 and GCS), so I modified Label Studio's s3 storage backend to support generic object storage endpoints, which allows us to connect to the Pachyderm s3 gateway running locally. you can see the code [here](label_studio/storage/s3.py)
 
 ## Getting Started
-This example uses a Pachyderm deployment for scaling and management. We can deploy locally or to a cloud deployment as described here: [Pachyderm Getting Started](https://docs.pachyderm.com/latest/getting_started/)
+This example uses a Pachyderm deployment for scaling and management. We can deploy a cluster on [Pacyderm Hub](hub.pachyderm.com) for free or deploy locally as described here: [Pachyderm Getting Started](https://docs.pachyderm.com/latest/getting_started/)
 
 Once everything is up, we can check the setup by running: 
-1. `kubectl get all` to ensure all the pods are up. 
+1. `kubectl get all` to ensure all the pods are up and ready. 
 2. `pachctl version` which will show both the `pachctl` and `pachd` versions.
 
 ### Configuring .env file
 The `.env` file needs to be configured for your Pachyderm s3 gateway. Pachyderm's s3 gateway is accessed through an `http` endpoint that is available on port `30600` on the Pachyderm cluster. This address is used to as the `ENDPOINT_URL` for the Label Studio backend in the `.env` file. 
 
-### Minikube configuration
+#### Pachyderm Hub
+If you are running your cluster on Pachyderm Hub, you can find out your `ENDPOINT_URL` by clicking the `Connect` button. You should see an address that looks something like: 
+
+`grpcs://hub-xx-xxxYYxxYY.clusters.pachyderm.io:31400`
+
+Just change the protocol to `http` and port to `30600`. This will now point at the S3 gateway. 
+
+`https://hub-xx-xxxYYxxYY.clusters.pachyderm.io:30600`
+
+
+#### Minikube configuration
 If you are running Pachyderm locally on minikube, you can get the `ENDPOINT_URL` for the Pachyderm s3 gateway by running the command:
 
 ```
@@ -83,15 +93,9 @@ pachctl get file -r labeled_data@v1:/ -o labeled_data/
 
 ```
 
-## Current Issues/Not Supported
-
-Future support:The output does have a reference for what the input file location was (could potentially be used to track consistency between raw and labeled if raw changes).
-
-We can load data into Pachyderm, label it, and output the result. 
-**We can change labels and see the versions of the labels? 
-
 ### Next Steps
 
+* The output does have a reference for what the input file location was (could potentially be used to track consistency between raw and labeled if raw changes).
 * Make deployment super easy
   * Build a helm chart to deploy label studio to Kubernetes with necessary env 
   * Standardize label studio project creation - different examples of configs
@@ -107,5 +111,5 @@ We can load data into Pachyderm, label it, and output the result.
   * When raw data is changed after that example is labeled, the task doesn't update. It does update when 
   * It seems as though the target and the source states are tied somehow, so it won't automatically update
   * If a raw file is removed or changed, then labels associated with that file should be removed. Since it's a single file per example, a changed file should be the deleting of one and addition of another. For now, this would need to be an external process that 
-* Once you've created a project and labeled data, the same starting configuration should be used. Label Studio automatically tries to start an image labeling config and if there is labeled data, this will throw errors until you load a compatible config for what's already labeled (i.e. you should not use the `--init` and `--force` flags after you've created the project).
+* Label Studio automatically tries to start an image labeling config and if there is labeled data, this will throw errors until you load a compatible config for what's already labeled (i.e. you should not use the `--init` and `--force` flags after you've created the project).
 
