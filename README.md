@@ -1,5 +1,5 @@
 # Label Studio with Pachyderm
-** *Moving*: Project moved to [Pachyderm examples](https://github.com/pachyderm/examples/tree/master/label-studio). 
+** *Moving*: Project in the process of moving to [Pachyderm examples](https://github.com/pachyderm/examples/tree/master/label-studio) to allow for better support. 
 <p align="center">
 	<img src='images/ls_p_integration.jpg' width='800' title='Pachyderm'>
 </p>
