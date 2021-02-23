@@ -29,6 +29,8 @@ Once everything is up, we can check the setup by running:
 ### Configuring .env file
 The `.env` file needs to be configured for your Pachyderm s3 gateway. Pachyderm's s3 gateway is accessed through an `http` endpoint that is available on port `30600` on the Pachyderm cluster. This address is used to as the `ENDPOINT_URL` for the Label Studio backend in the `.env` file. 
 
+
+
 #### Pachyderm Hub
 If you are running your cluster on Pachyderm Hub, you can find out your `ENDPOINT_URL` by clicking the `Connect` button. You should see an address that looks something like: 
 
@@ -38,6 +40,13 @@ Just change the protocol to `http` and port to `30600`. This will now point at t
 
 `https://hub-xx-xxxYYxxYY.clusters.pachyderm.io:30600`
 
+The `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in your `.env` file should be set to your Pachyderm `session_token` located in your Pachyderm config (typically in `~/.pachyderm/config.json`). More info on Pachyderm's [S3 gateway](https://docs.pachyderm.com/latest/deploy-manage/manage/s3gateway/configure-s3client/). 
+
+If you the following error, this is typically due to an expired session token. 
+
+```
+botocore.exceptions.ClientError: An error occurred (403) when calling the HeadBucket operation: Forbidden
+```
 
 #### Minikube configuration
 If you are running Pachyderm locally on minikube, you can get the `ENDPOINT_URL` for the Pachyderm s3 gateway by running the command:
@@ -46,6 +55,9 @@ If you are running Pachyderm locally on minikube, you can get the `ENDPOINT_URL`
 $ minikube ip
 192.168.64.8
 ```
+
+If you are running Pachyderm with authentication, then you can follow the same steps as the Hub setup. If not running with authentication, you can pass any non-empty string to `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in your `.env` file.
+
 
 <!-- ## Creating a new project
 A new project requires creating a new configuration (see some of the [examples](examples/)). Creating a new project with Label Studio can be done by from the command line. We'll use the Docker image that we created to do this, adding the `--init` flag which will create the project. 
