@@ -42,11 +42,13 @@ Just change the protocol to `http` and port to `30600`. This will now point at t
 
 The `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in your `.env` file should be set to your Pachyderm `session_token` located in your Pachyderm config (typically in `~/.pachyderm/config.json`). More info on Pachyderm's [S3 gateway](https://docs.pachyderm.com/latest/deploy-manage/manage/s3gateway/configure-s3client/). 
 
-If you the following error, this is typically due to an expired session token. 
+If you get the following error, 
 
 ```
 botocore.exceptions.ClientError: An error occurred (403) when calling the HeadBucket operation: Forbidden
 ```
+
+this is typically due to an expired session token. Reconnect to the cluster and update your `.env` with the new token. 
 
 #### Minikube configuration
 If you are running Pachyderm locally on minikube, you can get the `ENDPOINT_URL` for the Pachyderm s3 gateway by running the command:
